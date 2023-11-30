@@ -7,9 +7,9 @@ import { useTimerContext } from "../TimerContext";
 const Tabata = (timer) => {
     const { currentTimerId, isWorkoutRunning, fastForward, isRestart } = useTimerContext();
     const [currentTime, setCurrentTime] = useState(0); 
-    const [workTime, setWorkTime] = useState(timer.duration);
-    const [restTime, setRestTime] = useState(timer.restTime);
-    const [numRounds, setNumRounds] = useState(timer.numRounds);
+    const [workTime] = useState(timer.duration);
+    const [restTime] = useState(timer.restTime);
+    const [numRounds] = useState(timer.numRounds);
     const [currentRound, setCurrentRound] = useState(0);
     const [isRest, setIsRest] = useState(false);
 

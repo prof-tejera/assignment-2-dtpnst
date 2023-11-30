@@ -7,7 +7,7 @@ import { useTimerContext } from "../TimerContext";
 const Stopwatch = (timer) => {
     const { currentTimerId, isWorkoutRunning, fastForward, isRestart } = useTimerContext();
     const [currentTime, setCurrentTime] = useState(0);
-    const [endTime, setEndTime] = useState(timer.duration);
+    const [endTime] = useState(timer.duration);
 
 
     useEffect(() => {

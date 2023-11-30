@@ -23,11 +23,6 @@ const Timer = styled.div`
 
 const TimerTitle = styled.div``;
 
-const TimerControls = styled.div`
-  display: flex;
-  justify-content: space-around;
-  margin-top: 10px;
-`;
 
 const buttonStyle = {
   backgroundColor: "#fcba03",

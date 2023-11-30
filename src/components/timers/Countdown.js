@@ -38,7 +38,7 @@ const Countdown = (timer) => {
         if(isRestart) {
             setCurrentTime(timer.duration);
         }
-    }, [isRestart])
+    }, [isRestart, timer.duration])
 
     return (
       <Panel>

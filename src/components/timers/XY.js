@@ -1,17 +1,14 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import Panel from "../generic/Panel";
-import TimeInput from "../generic/TimeInput";
-import Duration from "../generic/Duration";
-import Input from "../generic/Input";
 import Timer from "../generic/Timer";
 import { useTimerContext } from "../TimerContext";
 
 const XY = (timer) => {
     const { currentTimerId, isWorkoutRunning, fastForward, isRestart } = useTimerContext();
     const [currentTime, setCurrentTime] = useState(0); 
-    const [countdownAmount, setCoundownAmount] = useState(timer.duration);
-    const [numRounds, setNumRounds] = useState(timer.numRounds);
+    const [countdownAmount] = useState(timer.duration);
+    const [numRounds] = useState(timer.numRounds);
     const [currentRound, setCurrentRound] = useState(0);
 
 
