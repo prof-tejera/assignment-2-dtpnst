@@ -51,6 +51,8 @@ As you have noticed this repository is empty. To begin this assignment you must 
 - Console is free of warnings/errors
 - Deploy your application
 
+Assignment URL: https://prof-tejera.github.io/assignment-2-dtpnst
+
 ### Deployment Instructions (GH actions)
 
 [Deployment instructions](https://github.com/prof-tejera/react-deployment-code#github-actions)
