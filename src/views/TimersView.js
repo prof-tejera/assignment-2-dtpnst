@@ -95,20 +95,17 @@ const TimersView = () => {
                 />
               </Timer>
             );
-            /*
           case "Stopwatch":
             return (
               <Timer key={timer.id}>
-                <TimerTitle>{timer.type}</TimerTitle>
+                <TimerTitle>#{index+1} {timer.type}</TimerTitle>
                 <Stopwatch
-                  timerId={timer.id}
-                  currentTime={timer.currentTime}
-                  isRunning={timer.isRunning}
-                  onStartStop={() => handleStartStop(timer.id)}
-                  onReset={() => handleReset(timer.id)}
+                  id={timer.id}
+                  duration={timer.duration.getTotalSeconds()}
                 />
               </Timer>
             );
+            /*
           case "Tabata":
             return (
               <Timer key={timer.id}>

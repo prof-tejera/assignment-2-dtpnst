@@ -7,6 +7,7 @@ export const TimerProvider = ({ children }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [currentTimerId, setCurrentTimerId] = useState(null);
   const [isWorkoutRunning, setIsWorkoutRunning] = useState(false);
+  const [isRestart, setIsRestart] = useState(false);
 
   const addTimer = timer => {
     setTimers(prevTimers => [...prevTimers, timer]);
@@ -33,15 +34,15 @@ export const TimerProvider = ({ children }) => {
     setCurrentIndex(0);
     setCurrentTimerId(timers[0].id);
     setIsWorkoutRunning(false);
+    setIsRestart(true);
   }
   const startStop = () => {
     setIsWorkoutRunning(!isWorkoutRunning);
-    console.log("Workout started " + isWorkoutRunning);
   }
 
 
   return (
-    <TimerContext.Provider value={{ timers, currentTimerId, currentIndex, isWorkoutRunning, addTimer, removeTimer, fastForward, restart, startStop }}>
+    <TimerContext.Provider value={{ timers, currentTimerId, currentIndex, isWorkoutRunning, isRestart, addTimer, removeTimer, fastForward, restart, startStop }}>
       {children}
     </TimerContext.Provider>
   );

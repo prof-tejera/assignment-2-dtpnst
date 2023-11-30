@@ -5,7 +5,7 @@ import Timer from "../generic/Timer";
 import { useTimerContext } from "../TimerContext";
 
 const Countdown = (timer) => {
-    const { currentTimerId, isWorkoutRunning, fastForward } = useTimerContext();
+    const { currentTimerId, isWorkoutRunning, fastForward, isRestart } = useTimerContext();
 
     const [currentTime, setCurrentTime] = useState(timer.duration);
 
@@ -34,6 +34,12 @@ const Countdown = (timer) => {
         return () => clearInterval(timerInterval);
     }, [timer, isWorkoutRunning, currentTimerId, currentTime, fastForward]);
 
+
+    useEffect(() => {
+        if(isRestart) {
+            setCurrentTime(timer.duration);
+        }
+    }, [isRestart])
 
     return (
       <Panel>

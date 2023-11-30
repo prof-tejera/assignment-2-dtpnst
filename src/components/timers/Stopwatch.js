@@ -4,59 +4,44 @@ import Panel from "../generic/Panel";
 import TimeInput from "../generic/TimeInput";
 import Duration from "../generic/Duration";
 import Timer from "../generic/Timer";
+import { useTimerContext } from "../TimerContext";
 
-const Stopwatch = () => {
-
+const Stopwatch = (timer) => {
+    const { currentTimerId, isWorkoutRunning, fastForward, isRestart } = useTimerContext();
     const [currentTime, setCurrentTime] = useState(0);
-    const [endTime, setEndTime] = useState(new Duration(0, 0, 0));
-    const [isRunning, setIsRunning] = useState(false);
+    const [endTime, setEndTime] = useState(timer.duration);
 
-    const handleStartStopClick = () => {
-        setIsRunning(!isRunning);
-    }
-
-    const handleResetClick = () => {
-        setCurrentTime(0);
-    }
-
-    const handleFastForwardClick = () => {
-        setCurrentTime(endTime.getTotalSeconds());
-        setIsRunning(false);
-    }
-
-    const handleEndTimeChange = (newEndTime) => {
-        setEndTime(new Duration(newEndTime.hours, newEndTime.minutes, newEndTime.seconds));
-    };
 
     useEffect(() => {
-        let timerId;
-        if (isRunning) {
-          if (currentTime < endTime.getTotalSeconds()) {
-            timerId = setInterval(() => {
+        let timerInterval;
+        if (isWorkoutRunning && currentTimerId === timer.id) {
+          console.log("Workout is running for timer " + timer.id);
+          if (currentTime < endTime) {
+            timerInterval = setInterval(() => {
               setCurrentTime((prevTime) => prevTime + 1); 
             }, 1000);
           } else {
-            setIsRunning(false);
+            fastForward();
           }
         } else {
-          clearInterval(timerId);
+          clearInterval(timerInterval);
         }
     
-        return () => clearInterval(timerId);
-      }, [isRunning, currentTime, endTime]);
-    
+        return () => clearInterval(timerInterval);
+      }, [timer, isWorkoutRunning, currentTimerId, fastForward, currentTime, endTime]);
+
+    useEffect(() => {
+      if(isRestart) {
+        setCurrentTime(0);
+      }
+    }, [isRestart])
     
 
     return (
         <Panel>
             <Timer
                 currentTime={currentTime}
-                handleStartStopClick={handleStartStopClick}
-                handleResetClick={handleResetClick}
-                handleFastForwardClick={handleFastForwardClick}
-                isRunning={isRunning}
             />
-            <TimeInput label="Time" duration={endTime} onTimeChange={handleEndTimeChange} />   
         </Panel>
     );
 
