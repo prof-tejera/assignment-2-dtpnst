@@ -37,6 +37,7 @@ export const TimerProvider = ({ children }) => {
     setIsRestart(true);
   }
   const startStop = () => {
+    setIsRestart(false);
     setIsWorkoutRunning(!isWorkoutRunning);
   }
 

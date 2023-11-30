@@ -2,7 +2,7 @@ import React from "react";
 
 const Input = ({label, type, inputId, isRequired, onChange, ...props}) => {
     const handleInputChange = (event) => {
-        onChange(event.target.value);
+        onChange(event);
     }
 
     const labelStyle = {

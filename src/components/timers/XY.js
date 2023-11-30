@@ -5,79 +5,49 @@ import TimeInput from "../generic/TimeInput";
 import Duration from "../generic/Duration";
 import Input from "../generic/Input";
 import Timer from "../generic/Timer";
+import { useTimerContext } from "../TimerContext";
 
-const XY = () => {
+const XY = (timer) => {
+    const { currentTimerId, isWorkoutRunning, fastForward, isRestart } = useTimerContext();
     const [currentTime, setCurrentTime] = useState(0); 
-    const [countdownAmount, setCoundownAmount] = useState(new Duration(0, 0, 0)); 
-    const [numRounds, setNumRounds] = useState(0);
+    const [countdownAmount, setCoundownAmount] = useState(timer.duration);
+    const [numRounds, setNumRounds] = useState(timer.numRounds);
     const [currentRound, setCurrentRound] = useState(0);
-    const [isRunning, setIsRunning] = useState(false);
-    const [isPaused, setIsPaused] = useState(false);
 
-    const handleStartStopClick = () => {
-        if(!isRunning && !isPaused) {
-            setCurrentTime(countdownAmount.getTotalSeconds());
-            setCurrentRound(1);
-        }
-
-        if(isRunning) {
-            setIsPaused(true)
-        }
-        
-        setIsRunning(!isRunning);
-        
-    }
-
-    const handleResetClick = () => {
-        setCurrentTime(countdownAmount.getTotalSeconds());
-        setCurrentRound(1);
-    }
-
-    const handleFastForwardClick = () => {
-        setCurrentTime(countdownAmount.getTotalSeconds());
-        setCurrentRound((prevRound) => prevRound +1);
-    }
-
-    const handleCountdownAmountChange = (newCountdownAmount) => {
-        setCoundownAmount(new Duration(newCountdownAmount.hours, newCountdownAmount.minutes, newCountdownAmount.seconds));
-    };
-
-    const handleNumRoundsChange = (newNumRounds) => {
-        setNumRounds(newNumRounds)
-    }
 
     useEffect(() => {
-        let timerId;
-        if (isRunning) {
+        let timerInterval;
+        if (isWorkoutRunning && currentTimerId === timer.id) {
             if (currentTime > 0) {
-                timerId = setInterval(() => {
+                timerInterval = setInterval(() => {
                     setCurrentTime((prevTime) => prevTime - 1);
                 }, 1000);
             } else if (currentRound < numRounds) {
-                setCurrentTime(countdownAmount.getTotalSeconds());
+                setCurrentTime(countdownAmount);
                 setCurrentRound((currentRound) => currentRound + 1);
             } else {
-                setIsRunning(false);
+                fastForward();
             }
         } else {
-            clearInterval(timerId);
+            clearInterval(timerInterval);
         }
 
-        return () => clearInterval(timerId);
-    }, [isRunning, currentTime, countdownAmount, currentRound, numRounds]);
+        return () => clearInterval(timerInterval);
+    }, [timer, isWorkoutRunning, currentTimerId, fastForward, currentTime, countdownAmount, currentRound, numRounds]);
+
+    useEffect(() => {
+        if(isRestart) {
+            setCurrentTime(0);
+            setCurrentRound(0)
+        }
+    }, [isRestart])
 
     return (
         <Panel>
             <Timer 
                 currentTime={currentTime}
                 currentRound={currentRound}
-                handleStartStopClick={handleStartStopClick}
-                handleResetClick={handleResetClick}
-                handleFastForwardClick={handleFastForwardClick}
-                isRunning={isRunning}
             />
-            <TimeInput label="Time Per Round" duration={countdownAmount} onTimeChange={handleCountdownAmountChange} />
-            <Input label="# of Rounds" type="number" min="0"  onChange={handleNumRoundsChange}/>  
         </Panel>
     );
 };

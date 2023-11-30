@@ -1,8 +1,6 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import Panel from "../generic/Panel";
-import TimeInput from "../generic/TimeInput";
-import Duration from "../generic/Duration";
 import Timer from "../generic/Timer";
 import { useTimerContext } from "../TimerContext";
 

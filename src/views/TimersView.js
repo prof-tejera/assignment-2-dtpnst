@@ -105,43 +105,30 @@ const TimersView = () => {
                 />
               </Timer>
             );
-            /*
+
           case "Tabata":
             return (
               <Timer key={timer.id}>
-                <TimerTitle>{timer.type}</TimerTitle>
+                <TimerTitle>#{index+1} {timer.type}</TimerTitle>
                 <Tabata
-                  timerId={timer.id}
-                  currentTime={timer.currentTime}
-                  workTime={timer.workTime}
-                  restTime={timer.restTime}
+                  id={timer.id}
+                  duration={timer.duration.getTotalSeconds()}
+                  restTime={timer.restTime.getTotalSeconds()}
                   numRounds={timer.numRounds}
-                  isRunning={timer.isRunning}
-                  onStartStop={() => handleStartStop(timer.id)}
-                  onReset={() => handleReset(timer.id)}
-                  onFastForward={() => handleFastForward(timer.id)}
-                  onWorkTimeChange={(newWorkTime) => handleDurationChange(timer.id, newWorkTime)}
-                  onRestTimeChange={(newRestTime) => handleRestTimeChange(timer.id, newRestTime)}
-                  onNumRoundsChange={(newNumRounds) => handleNumRoundsChange(timer.id, newNumRounds)}
                 />
               </Timer>
             );
           case "XY":
             return (
               <Timer key={timer.id}>
-                <TimerTitle>{timer.type}</TimerTitle>
+                <TimerTitle>#{index+1} {timer.type}</TimerTitle>
                 <XY
-                  timerId={timer.id}
-                  currentTime={timer.currentTime}
-                  duration={timer.duration}
-                  isRunning={timer.isRunning}
-                  onStartStop={() => handleStartStop(timer.id)}
-                  onReset={() => handleReset(timer.id)}
-                  onFastForward={() => handleFastForward(timer.id)}
-                  onDurationChange={(newDuration) => handleDurationChange(timer.id, newDuration)}
+                  id={timer.id}
+                  duration={timer.duration.getTotalSeconds()}
+                  numRounds={timer.numRounds}
                 />
               </Timer>
-            );*/
+            );
           default:
             return null;
         }
