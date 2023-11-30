@@ -1,71 +1,46 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import Panel from "../generic/Panel";
-import TimeInput from "../generic/TimeInput";
-import Duration from "../generic/Duration";
 import Timer from "../generic/Timer";
+import { useTimerContext } from "../TimerContext";
 
-const Countdown = () => {
-    const [currentTime, setCurrentTime] = useState(0); 
-    const [countdownAmount, setCoundownAmount] = useState(new Duration(0, 0, 0)); 
-    const [isRunning, setIsRunning] = useState(false);
-    const [isPaused, setIsPaused] = useState(false)
+const Countdown = (timer) => {
+    const { currentTimerId, isWorkoutRunning, fastForward } = useTimerContext();
 
-    const handleStartStopClick = () => {
-        
-        if(!isRunning && !isPaused) {
-            setCurrentTime(countdownAmount.getTotalSeconds());
-        }
-
-        if(isRunning) {
-            setIsPaused(true)
-        }
-        
-        setIsRunning(!isRunning);
-        
-    }
-
-    const handleResetClick = () => {
-        setCurrentTime(countdownAmount.getTotalSeconds());
-    }
-
-    const handleFastForwardClick = () => {
-        setCurrentTime(0);
-        setIsRunning(false);
-    }
-
-    const handleCountdownAmountChange = (newCountdownAmount) => {
-        setCoundownAmount(new Duration(newCountdownAmount.hours, newCountdownAmount.minutes, newCountdownAmount.seconds));
-    };
+    const [currentTime, setCurrentTime] = useState(timer.duration);
 
     useEffect(() => {
-        let timerId;
-        if (isRunning) {
+        let timerInterval;
+        if (isWorkoutRunning && currentTimerId === timer.id) {
+            console.log("Workout is running for timer " + timer.id);
             if (currentTime > 0) {
-                timerId = setInterval(() => {
-                    setCurrentTime((prevTime) => prevTime - 1); 
+                timerInterval = setInterval(() => {
+                    setCurrentTime((prevTime) => {
+                        if (prevTime > 0) {
+                            return prevTime - 1;
+                        } else {
+                            fastForward();
+                            return prevTime;
+                        }
+                    });
                 }, 1000);
             } else {
-                setIsRunning(false); 
+                fastForward();
             }
         } else {
-            clearInterval(timerId);
+            clearInterval(timerInterval);
         }
 
-        return () => clearInterval(timerId);
-    }, [isRunning, currentTime]);
+        return () => clearInterval(timerInterval);
+    }, [timer, isWorkoutRunning, currentTimerId, currentTime, fastForward]);
+
 
     return (
-        <Panel>
-            <Timer
-                currentTime={currentTime}
-                handleStartStopClick={handleStartStopClick}
-                handleResetClick={handleResetClick}
-                handleFastForwardClick={handleFastForwardClick}
-                isRunning={isRunning}
-            />
-            <TimeInput label="Time" duration={countdownAmount} onTimeChange={handleCountdownAmountChange} />
-        </Panel>
+      <Panel>
+          <Timer
+            currentTime={currentTime}
+          />
+      </Panel>
     );
 };
 

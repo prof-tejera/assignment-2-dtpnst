@@ -10,6 +10,7 @@ export default class Duration {
     }
 
     formatDuration() {
+        console.log("Formatting Duration of " + this.seconds);
         const formattedHours = String(Math.floor(this.hours)).padStart(2, '0');
         const formattedMinutes = String(Math.floor(this.minutes)).padStart(2, '0');
         const formattedSeconds = String(Math.floor(this.seconds)).padStart(2, '0');

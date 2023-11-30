@@ -1,10 +1,12 @@
 import React from "react";
 import styled from "styled-components";
-
 import Stopwatch from "../components/timers/Stopwatch";
 import Countdown from "../components/timers/Countdown";
 import XY from "../components/timers/XY";
 import Tabata from "../components/timers/Tabata";
+import { useTimerContext } from "../components/TimerContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faForward, faPause, faPlay, faRotateLeft } from "@fortawesome/free-solid-svg-icons";
 
 const Timers = styled.div`
   display: flex;
@@ -21,22 +23,132 @@ const Timer = styled.div`
 
 const TimerTitle = styled.div``;
 
+const TimerControls = styled.div`
+  display: flex;
+  justify-content: space-around;
+  margin-top: 10px;
+`;
+
+const buttonStyle = {
+  backgroundColor: "#fcba03",
+  color: "white",
+  borderRadius: "8px",
+  padding: "5px 10px",
+  alignItems: "center",
+  justifyContent: "center",
+  cursor: "pointer",
+  boxShadow: "2px 2px 2px rgba(0, 0, 0, 0.3)",
+  border: "5px",
+  borderStyle: "solid",
+  borderColor: "#bf8f0a",
+};
+
+const resetButtonStyle = {
+  backgroundColor: "#d9311e",
+  color: "white",
+  borderRadius: "8px",
+  padding: "5px 10px",
+  alignItems: "center",
+  justifyContent: "center",
+  cursor: "pointer",
+  boxShadow: "2px 2px 2px rgba(0, 0, 0, 0.3)",
+  border: "5px",
+  borderStyle: "solid",
+  borderColor: "#ba3425",
+};
+
+const buttonContainerStyle = {
+  paddingLeft: "16px",
+}
+
 const TimersView = () => {
-  const timers = [
-    { title: "Stopwatch", C: <Stopwatch /> },
-    { title: "Countdown", C: <Countdown /> },
-    { title: "XY", C: <XY /> },
-    { title: "Tabata", C: <Tabata /> },
-  ];
+  const { timers, startStop, fastForward, removeTimer, isWorkoutRunning, restart } = useTimerContext();
+
+  const handleStartStopClick = () => {
+    startStop();
+  }
+
+  const handleResetClick = () => {
+    restart();
+  }
+
+  const handleFastForwardClick = () => {
+    fastForward();
+  }
 
   return (
     <Timers>
-      {timers.map((timer) => (
-        <Timer key={`timer-${timer.title}`}>
-          <TimerTitle>{timer.title}</TimerTitle>
-          {timer.C}
-        </Timer>
-      ))}
+      <div style={buttonContainerStyle}>
+        <FontAwesomeIcon icon={isWorkoutRunning ? faPause : faPlay} style={buttonStyle} onClick={handleStartStopClick}/>
+        <FontAwesomeIcon icon={faRotateLeft} style={resetButtonStyle} onClick={handleResetClick}/>
+        <FontAwesomeIcon icon={faForward} style={buttonStyle} onClick={handleFastForwardClick} />
+      </div>
+      {timers.map((timer, index) => {
+        switch (timer.type) {
+          case "Countdown":
+            return (
+              <Timer key={timer.id}>
+                <TimerTitle>#{index+1} {timer.type}</TimerTitle>
+                <Countdown
+                  id={timer.id}
+                  duration={timer.duration.getTotalSeconds()}
+                />
+              </Timer>
+            );
+            /*
+          case "Stopwatch":
+            return (
+              <Timer key={timer.id}>
+                <TimerTitle>{timer.type}</TimerTitle>
+                <Stopwatch
+                  timerId={timer.id}
+                  currentTime={timer.currentTime}
+                  isRunning={timer.isRunning}
+                  onStartStop={() => handleStartStop(timer.id)}
+                  onReset={() => handleReset(timer.id)}
+                />
+              </Timer>
+            );
+          case "Tabata":
+            return (
+              <Timer key={timer.id}>
+                <TimerTitle>{timer.type}</TimerTitle>
+                <Tabata
+                  timerId={timer.id}
+                  currentTime={timer.currentTime}
+                  workTime={timer.workTime}
+                  restTime={timer.restTime}
+                  numRounds={timer.numRounds}
+                  isRunning={timer.isRunning}
+                  onStartStop={() => handleStartStop(timer.id)}
+                  onReset={() => handleReset(timer.id)}
+                  onFastForward={() => handleFastForward(timer.id)}
+                  onWorkTimeChange={(newWorkTime) => handleDurationChange(timer.id, newWorkTime)}
+                  onRestTimeChange={(newRestTime) => handleRestTimeChange(timer.id, newRestTime)}
+                  onNumRoundsChange={(newNumRounds) => handleNumRoundsChange(timer.id, newNumRounds)}
+                />
+              </Timer>
+            );
+          case "XY":
+            return (
+              <Timer key={timer.id}>
+                <TimerTitle>{timer.type}</TimerTitle>
+                <XY
+                  timerId={timer.id}
+                  currentTime={timer.currentTime}
+                  duration={timer.duration}
+                  isRunning={timer.isRunning}
+                  onStartStop={() => handleStartStop(timer.id)}
+                  onReset={() => handleReset(timer.id)}
+                  onFastForward={() => handleFastForward(timer.id)}
+                  onDurationChange={(newDuration) => handleDurationChange(timer.id, newDuration)}
+                />
+              </Timer>
+            );*/
+          default:
+            return null;
+        }
+      })}
     </Timers>
   );
 };
