@@ -13,7 +13,6 @@ const Stopwatch = (timer) => {
     useEffect(() => {
         let timerInterval;
         if (isWorkoutRunning && currentTimerId === timer.id) {
-          console.log("Workout is running for timer " + timer.id);
           if (currentTime < endTime) {
             timerInterval = setInterval(() => {
               setCurrentTime((prevTime) => prevTime + 1); 

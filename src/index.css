@@ -46,7 +46,15 @@ th {
   font-family: 'Orbitron', sans-serif;
   color: #4f635d;
   position: relative;
-  top: -200px;
+  top: -170px;
   right: -140px;
   width: 50px;
+}
+
+.runningTimer {
+  background-color: #b8dcb0; /* Green background for running timer */
+}
+
+.notRunningTimer {
+  background-color: #ececec; /* Red background for not running timer */
 }

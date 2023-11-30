@@ -6,7 +6,7 @@ import XY from "../components/timers/XY";
 import Tabata from "../components/timers/Tabata";
 import { useTimerContext } from "../components/TimerContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faForward, faPause, faPlay, faRotateLeft } from "@fortawesome/free-solid-svg-icons";
+import { faForward, faPause, faPlay, faRotateLeft, faXmark } from "@fortawesome/free-solid-svg-icons";
 
 const Timers = styled.div`
   display: flex;
@@ -57,12 +57,30 @@ const resetButtonStyle = {
   borderColor: "#ba3425",
 };
 
+const removeButtonStyle = {
+  backgroundColor: "#d9311e",
+  color: "white",
+  borderRadius: "8px",
+  padding: "5px 10px",
+  alignItems: "center",
+  justifyContent: "center",
+  cursor: "pointer",
+  boxShadow: "2px 2px 2px rgba(0, 0, 0, 0.3)",
+  border: "5px",
+  borderStyle: "solid",
+  borderColor: "#ba3425",
+  position: "relative",
+  display: "flex",
+  left: "215px",
+  top: "-40px",
+};
+
 const buttonContainerStyle = {
   paddingLeft: "16px",
 }
 
 const TimersView = () => {
-  const { timers, startStop, fastForward, removeTimer, isWorkoutRunning, restart } = useTimerContext();
+  const { timers, currentTimerId, startStop, fastForward, removeTimer, isWorkoutRunning, restart } = useTimerContext();
 
   const handleStartStopClick = () => {
     startStop();
@@ -76,6 +94,10 @@ const TimersView = () => {
     fastForward();
   }
 
+  const handleRemoveTimer = (timerId) => {
+    removeTimer(timerId);
+  }
+
   return (
     <Timers>
       <div style={buttonContainerStyle}>
@@ -83,56 +105,39 @@ const TimersView = () => {
         <FontAwesomeIcon icon={faRotateLeft} style={resetButtonStyle} onClick={handleResetClick}/>
         <FontAwesomeIcon icon={faForward} style={buttonStyle} onClick={handleFastForwardClick} />
       </div>
-      {timers.map((timer, index) => {
-        switch (timer.type) {
-          case "Countdown":
-            return (
-              <Timer key={timer.id}>
-                <TimerTitle>#{index+1} {timer.type}</TimerTitle>
-                <Countdown
-                  id={timer.id}
-                  duration={timer.duration.getTotalSeconds()}
-                />
-              </Timer>
-            );
-          case "Stopwatch":
-            return (
-              <Timer key={timer.id}>
-                <TimerTitle>#{index+1} {timer.type}</TimerTitle>
-                <Stopwatch
-                  id={timer.id}
-                  duration={timer.duration.getTotalSeconds()}
-                />
-              </Timer>
-            );
-
-          case "Tabata":
-            return (
-              <Timer key={timer.id}>
-                <TimerTitle>#{index+1} {timer.type}</TimerTitle>
-                <Tabata
-                  id={timer.id}
-                  duration={timer.duration.getTotalSeconds()}
-                  restTime={timer.restTime.getTotalSeconds()}
-                  numRounds={timer.numRounds}
-                />
-              </Timer>
-            );
-          case "XY":
-            return (
-              <Timer key={timer.id}>
-                <TimerTitle>#{index+1} {timer.type}</TimerTitle>
-                <XY
-                  id={timer.id}
-                  duration={timer.duration.getTotalSeconds()}
-                  numRounds={timer.numRounds}
-                />
-              </Timer>
-            );
-          default:
-            return null;
-        }
-      })}
+      {timers.map((timer, index) => (
+        <Timer key={timer.id} className={(timer.id === currentTimerId) ? 'runningTimer' : 'notRunningTimer'}>
+          <TimerTitle>#{index+1} {timer.type}</TimerTitle>
+          <FontAwesomeIcon icon={faXmark} style={removeButtonStyle} onClick={() => handleRemoveTimer(timer.id)} />
+          {timer.type === "Countdown" && (
+            <Countdown
+              id={timer.id}
+              duration={timer.duration.getTotalSeconds()}
+            />
+          )}
+          {timer.type === "Stopwatch" && (
+            <Stopwatch
+              id={timer.id}
+              duration={timer.duration.getTotalSeconds()}
+            />
+          )}
+          {timer.type === "Tabata" && (
+            <Tabata
+              id={timer.id}
+              duration={timer.duration.getTotalSeconds()}
+              restTime={timer.restTime.getTotalSeconds()}
+              numRounds={timer.numRounds}
+            />
+          )}
+          {timer.type === "XY" && (
+            <XY
+              id={timer.id}
+              duration={timer.duration.getTotalSeconds()}
+              numRounds={timer.numRounds}
+            />
+          )}
+        </Timer>
+      ))}
     </Timers>
   );
 };
